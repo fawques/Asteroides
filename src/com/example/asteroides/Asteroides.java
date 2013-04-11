@@ -15,6 +15,7 @@ public class Asteroides extends Activity {
 	private Button bAcercaDe;
 	private Button bPunt;
 	private Button bSalir;
+	private Button bJugar;
 	public static AlmacenPuntuaciones almacen = new AlmacenPuntuacionesArray();
 
 	@Override
@@ -48,6 +49,23 @@ public class Asteroides extends Activity {
 
 			}
 		});
+		
+		bJugar = (Button) findViewById(R.id.button1);
+		bJugar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				lanzarJuego();
+
+			}
+		});
+	}
+
+	protected void lanzarJuego() {
+		Intent i = new Intent(this, Juego.class);
+
+		startActivity(i);
+		
 	}
 
 	@Override
