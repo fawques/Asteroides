@@ -20,9 +20,10 @@
         android:text="" />
 
     <TextView
+        android:id="@+id/Titulo"
+        style="@style/TextoAsteroides"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        style="@style/TextoAsteroides"
         android:layout_weight="4"
         android:text="@string/app_name" />
 

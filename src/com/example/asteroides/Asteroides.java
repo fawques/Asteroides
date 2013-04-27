@@ -8,7 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Asteroides extends Activity {
 
@@ -59,6 +62,21 @@ public class Asteroides extends Activity {
 
 			}
 		});
+		
+		TextView titulo = (TextView) findViewById(R.id.Titulo);
+		Button bConfig = (Button) findViewById(R.id.button2);
+		
+		Animation animacionTitulo = AnimationUtils.loadAnimation(this,R.anim.giro_con_zoom);
+		Animation animacionBoton1 = AnimationUtils.loadAnimation(this,R.anim.aparecer);
+		Animation animacionBoton2 = AnimationUtils.loadAnimation(this,R.anim.desplazamiento_derecha);
+		
+		
+		titulo.startAnimation(animacionTitulo);
+		bJugar.startAnimation(animacionBoton1);
+		bConfig.startAnimation(animacionBoton2);
+		
+		
+
 	}
 
 	protected void lanzarJuego() {
@@ -104,7 +122,8 @@ public class Asteroides extends Activity {
 	}
 
 	public void lanzarAcercaDe(View view) {
-
+		Animation animacion = AnimationUtils.loadAnimation(this,R.anim.giro_con_zoom);
+		bAcercaDe.startAnimation(animacion);
 		Intent i = new Intent(this, AcercaDe.class);
 		i.putExtra("nombre", "prueba de datos");
 		startActivity(i);
