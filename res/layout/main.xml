@@ -62,9 +62,9 @@
 
     <Button
         android:id="@+id/button5"
+        style="@style/TextoAsteroides.botones"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        style="@style/TextoAsteroides.botones"
         android:layout_weight="0.5"
         android:text="@string/boton_Salir" />
 
