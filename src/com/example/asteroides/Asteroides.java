@@ -1,7 +1,15 @@
 package com.example.asteroides;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,8 +18,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class Asteroides extends Activity {
+public class Asteroides extends Activity implements OnGesturePerformedListener {
 
+	private GestureLibrary libreria;
 	private Button bAcercaDe;
 	private Button bPunt;
 	private Button bSalir;
@@ -27,7 +36,7 @@ public class Asteroides extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				lanzarAcercaDe(null);
+				lanzarAcercaDe();
 
 			}
 		});
@@ -36,7 +45,7 @@ public class Asteroides extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				lanzarPuntuaciones(null);
+				lanzarPuntuaciones();
 
 			}
 		});
@@ -49,7 +58,7 @@ public class Asteroides extends Activity {
 
 			}
 		});
-		
+
 		bJugar = (Button) findViewById(R.id.button1);
 		bJugar.setOnClickListener(new OnClickListener() {
 
@@ -59,13 +68,26 @@ public class Asteroides extends Activity {
 
 			}
 		});
+		libreria = GestureLibraries.fromRawResource(this, R.raw.gestures);
+
+		if (!libreria.load()) {
+
+			finish();
+
+		}
+
+		GestureOverlayView gesturesView =
+
+		(GestureOverlayView) findViewById(R.id.gestures);
+
+		gesturesView.addOnGesturePerformedListener(this);
 	}
 
 	protected void lanzarJuego() {
 		Intent i = new Intent(this, Juego.class);
 
 		startActivity(i);
-		
+
 	}
 
 	@Override
@@ -89,11 +111,11 @@ public class Asteroides extends Activity {
 
 		case R.id.acercaDe:
 
-			lanzarAcercaDe(null);
+			lanzarAcercaDe();
 
 			break;
 		case R.id.config:
-			lanzarPreferencias(null);
+			lanzarPreferencias();
 			break;
 
 		}
@@ -103,7 +125,7 @@ public class Asteroides extends Activity {
 
 	}
 
-	public void lanzarAcercaDe(View view) {
+	public void lanzarAcercaDe() {
 
 		Intent i = new Intent(this, AcercaDe.class);
 		i.putExtra("nombre", "prueba de datos");
@@ -111,7 +133,7 @@ public class Asteroides extends Activity {
 
 	}
 
-	public void lanzarPreferencias(View view) {
+	public void lanzarPreferencias() {
 
 		Intent i = new Intent(this, Preferencias.class);
 		i.putExtra("nombre", "prueba de datos");
@@ -119,11 +141,42 @@ public class Asteroides extends Activity {
 
 	}
 
-	public void lanzarPuntuaciones(View view) {
+	public void lanzarPuntuaciones() {
 
 		Intent i = new Intent(this, Puntuaciones.class);
 
 		startActivity(i);
+
+	}
+
+	@Override
+	public void onGesturePerformed(GestureOverlayView ov, Gesture gesture) {
+
+		ArrayList<Prediction> predictions = libreria.recognize(gesture);
+
+		if (predictions.size() > 0) {
+
+			String comando = predictions.get(0).name;
+
+			if (comando.equals("jugar")) {
+
+				lanzarJuego();
+
+			} else if (comando.equals("configurar")) {
+
+				lanzarPreferencias();
+
+			} else if (comando.equals("acerca_de")) {
+
+				lanzarAcercaDe();
+
+			} else if (comando.equals("cancelar")) {
+
+				finish();
+
+			}
+
+		}
 
 	}
 
