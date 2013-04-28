@@ -1,5 +1,6 @@
 package com.example.asteroides;
 
+import java.util.List;
 import java.util.Vector;
 
 import android.annotation.TargetApi;
@@ -12,13 +13,17 @@ import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class VistaJuego extends View {
+public class VistaJuego extends View implements SensorEventListener {
 
 	// //// ASTEROIDES //////
 
@@ -137,6 +142,21 @@ public class VistaJuego extends View {
 
 		}
 
+		SensorManager mSensorManager = (SensorManager) context
+				.getSystemService(Context.SENSOR_SERVICE);
+
+		List<Sensor> listSensors = mSensorManager
+				.getSensorList(Sensor.TYPE_ACCELEROMETER);
+
+		if (!listSensors.isEmpty()) {
+
+			Sensor orientationSensor = listSensors.get(0);
+
+			mSensorManager.registerListener(this, orientationSensor,
+
+			SensorManager.SENSOR_DELAY_GAME);
+		}
+
 	}
 
 	protected synchronized void actualizaFisica() {
@@ -222,7 +242,7 @@ public class VistaJuego extends View {
 			} else if (dx < 6 && dy > 6) {
 
 				aceleracionNave = Math.round((mY - y) / 25);
-				if(aceleracionNave < 0)
+				if (aceleracionNave < 0)
 					aceleracionNave = 0;
 
 				disparo = false;
@@ -239,7 +259,7 @@ public class VistaJuego extends View {
 
 			if (disparo) {
 
-				//ActivaMisil();
+				// ActivaMisil();
 
 			}
 
@@ -405,6 +425,35 @@ public class VistaJuego extends View {
 			}
 
 		}
+
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	}
+
+	private boolean hayValorInicial = false;
+
+	private float valorInicial;
+	private float valorInicialAcel;
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+
+		float valor = event.values[1];
+		float valorAcel = event.values[2];
+
+		if (!hayValorInicial) {
+
+			valorInicial = valor;
+			valorInicialAcel = valorAcel;
+
+			hayValorInicial = true;
+
+		}
+
+		giroNave = (int) (valor - valorInicial) * 2 ;
+		aceleracionNave = (int) (valorAcel - valorInicialAcel) / 5 ;
 
 	}
 }
