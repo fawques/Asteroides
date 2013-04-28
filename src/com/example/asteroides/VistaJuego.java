@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -65,6 +66,13 @@ public class VistaJuego extends View implements SensorEventListener {
 	private float mX = 0, mY = 0;
 
 	private boolean disparo = false;
+	private Juego padre;
+
+	public void setPadre(Activity padre) {
+
+		this.padre = (Juego)padre;
+
+	}
 
 	public VistaJuego(Context context, AttributeSet attrs) {
 
@@ -453,12 +461,10 @@ public class VistaJuego extends View implements SensorEventListener {
 
 		}
 
-		giroNave = (int) (valor - valorInicial) * 2 ;
-		TextView giro = (TextView) findViewById(R.id.giroLabel);
-		giro.append("" + giroNave);
-		aceleracionNave = (int) (valorAcel - valorInicialAcel) / 5 ;
-		TextView acel = (TextView) findViewById(R.id.aceleracionLabel);
-		acel.append("" + aceleracionNave);
+		giroNave = (int) (valor - valorInicial) * 2;
+
+		aceleracionNave = (float) ((valorAcel - valorInicialAcel) / 5.0);
+		padre.actualizarEtiquetas(aceleracionNave,giroNave);
 
 	}
 }
