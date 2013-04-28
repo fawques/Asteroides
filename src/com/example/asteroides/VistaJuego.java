@@ -22,6 +22,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 public class VistaJuego extends View implements SensorEventListener {
 
@@ -453,7 +454,11 @@ public class VistaJuego extends View implements SensorEventListener {
 		}
 
 		giroNave = (int) (valor - valorInicial) * 2 ;
+		TextView giro = (TextView) findViewById(R.id.giroLabel);
+		giro.append("" + giroNave);
 		aceleracionNave = (int) (valorAcel - valorInicialAcel) / 5 ;
+		TextView acel = (TextView) findViewById(R.id.aceleracionLabel);
+		acel.append("" + aceleracionNave);
 
 	}
 }

@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout
-   xmlns:android="http://schemas.android.com/apk/res/android"
-
-    android:orientation="vertical"
-
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FrameLayout1"
     android:layout_width="fill_parent"
-
     android:layout_height="fill_parent" >
 
     <com.example.asteroides.VistaJuego
+        android:id="@+id/VistaJuego"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/fondo"
+        android:focusable="true" />
 
-          android:id="@+id/VistaJuego"
+    <TextView
+        android:id="@+id/aceleracionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:text="a="
+        android:textColor="@android:color/white" />
 
-          android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/giroLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="g=" />
 
-          android:layout_height="fill_parent"
-
-          android:focusable="true"
-
-          android:background="@drawable/fondo" />
-
-</LinearLayout>
+</FrameLayout>
