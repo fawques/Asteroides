@@ -27,6 +27,19 @@
     android:entryValues="@array/tiposGraficosValores"
 
     android:defaultValue="1"/>
+  <ListPreference
+
+    android:key="controles"
+
+    android:title="Tipo de control"
+
+    android:summary="Se escoge el método de control"
+
+    android:entries="@array/tiposControles"
+
+    android:entryValues="@array/tiposControlesValores"
+
+    android:defaultValue="1"/>
 
   <EditTextPreference
 

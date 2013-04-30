@@ -19,5 +19,25 @@
   <item>2</item>
 
 </string-array>
+<string-array name="tiposControles">
+
+  <item>teclado</item>
+
+  <item>táctil</item>
+
+  <item>sensores</item>
+
+</string-array>
+
+<string-array name="tiposControlesValores">
+
+  <item>0</item>
+
+  <item>1</item>
+
+  <item>2</item>
+
+</string-array>
+
 
 </resources>

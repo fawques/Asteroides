@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 public class VistaJuego extends View implements SensorEventListener {
 
+	SharedPreferences pref;
 	// //// ASTEROIDES //////
 
 	private Vector<Grafico> Asteroides; // Vector con los Asteroides
@@ -70,7 +71,7 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	public void setPadre(Activity padre) {
 
-		this.padre = (Juego)padre;
+		this.padre = (Juego) padre;
 
 	}
 
@@ -80,7 +81,7 @@ public class VistaJuego extends View implements SensorEventListener {
 
 		Drawable drawableNave, drawableAsteroide, drawableMisil;
 
-		SharedPreferences pref = context.getSharedPreferences(
+		pref = context.getSharedPreferences(
 				"com.example.asteroides_preferences", Context.MODE_PRIVATE);
 
 		if (pref.getString("graficos", "1").equals("0")) {
@@ -221,65 +222,67 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
 		super.onTouchEvent(event);
+		if (pref.getString("controles", "-1").equals("1")) {
+			float x = event.getX();
 
-		float x = event.getX();
+			float y = event.getY();
 
-		float y = event.getY();
+			switch (event.getAction()) {
 
-		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
 
-		case MotionEvent.ACTION_DOWN:
+				disparo = true;
 
-			disparo = true;
+				break;
 
-			break;
+			case MotionEvent.ACTION_MOVE:
 
-		case MotionEvent.ACTION_MOVE:
+				float dx = Math.abs(x - mX);
 
-			float dx = Math.abs(x - mX);
+				float dy = Math.abs(y - mY);
 
-			float dy = Math.abs(y - mY);
+				if (dy < 6 && dx > 6) {
 
-			if (dy < 6 && dx > 6) {
+					giroNave = Math.round((x - mX) / 2);
 
-				giroNave = Math.round((x - mX) / 2);
+					disparo = false;
 
-				disparo = false;
+				} else if (dx < 6 && dy > 6) {
 
-			} else if (dx < 6 && dy > 6) {
+					aceleracionNave = Math.round((mY - y) / 25);
+					if (aceleracionNave < 0)
+						aceleracionNave = 0;
 
-				aceleracionNave = Math.round((mY - y) / 25);
-				if (aceleracionNave < 0)
-					aceleracionNave = 0;
+					disparo = false;
 
-				disparo = false;
+				}
+
+				break;
+
+			case MotionEvent.ACTION_UP:
+
+				giroNave = 0;
+
+				aceleracionNave = 0;
+
+				if (disparo) {
+
+					// ActivaMisil();
+
+				}
+
+				break;
 
 			}
 
-			break;
+			mX = x;
+			mY = y;
 
-		case MotionEvent.ACTION_UP:
-
-			giroNave = 0;
-
-			aceleracionNave = 0;
-
-			if (disparo) {
-
-				// ActivaMisil();
-
-			}
-
-			break;
-
+			return true;
+		} else {
+			return false;
 		}
-
-		mX = x;
-		mY = y;
-
-		return true;
 
 	}
 
@@ -336,50 +339,53 @@ public class VistaJuego extends View implements SensorEventListener {
 	public boolean onKeyDown(int codigoTecla, KeyEvent evento) {
 
 		super.onKeyDown(codigoTecla, evento);
+		if (pref.getString("controles", "-1").equals("0")) {
+			// Suponemos que vamos a procesar la pulsación
 
-		// Suponemos que vamos a procesar la pulsación
+			boolean procesada = true;
 
-		boolean procesada = true;
+			switch (codigoTecla) {
 
-		switch (codigoTecla) {
+			case KeyEvent.KEYCODE_DPAD_UP:
 
-		case KeyEvent.KEYCODE_DPAD_UP:
+				aceleracionNave = +PASO_ACELERACION_NAVE;
 
-			aceleracionNave = +PASO_ACELERACION_NAVE;
+				break;
 
-			break;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
 
-		case KeyEvent.KEYCODE_DPAD_LEFT:
+				giroNave = -PASO_GIRO_NAVE;
 
-			giroNave = -PASO_GIRO_NAVE;
+				break;
 
-			break;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
 
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
+				giroNave = +PASO_GIRO_NAVE;
 
-			giroNave = +PASO_GIRO_NAVE;
+				break;
 
-			break;
+			case KeyEvent.KEYCODE_DPAD_CENTER:
 
-		case KeyEvent.KEYCODE_DPAD_CENTER:
+			case KeyEvent.KEYCODE_ENTER:
 
-		case KeyEvent.KEYCODE_ENTER:
+				// ActivaMisil();
 
-			// ActivaMisil();
+				break;
 
-			break;
+			default:
 
-		default:
+				// Si estamos aquí, no hay pulsación que nos interese
 
-			// Si estamos aquí, no hay pulsación que nos interese
+				procesada = false;
 
-			procesada = false;
+				break;
 
-			break;
+			}
 
+			return procesada;
+		} else {
+			return false;
 		}
-
-		return procesada;
 
 	}
 
@@ -387,38 +393,41 @@ public class VistaJuego extends View implements SensorEventListener {
 	public boolean onKeyUp(int codigoTecla, KeyEvent evento) {
 
 		super.onKeyUp(codigoTecla, evento);
+		if (pref.getString("controles", "-1").equals("0")) {
+			// Suponemos que vamos a procesar la pulsación
 
-		// Suponemos que vamos a procesar la pulsación
+			boolean procesada = true;
 
-		boolean procesada = true;
+			switch (codigoTecla) {
 
-		switch (codigoTecla) {
+			case KeyEvent.KEYCODE_DPAD_UP:
 
-		case KeyEvent.KEYCODE_DPAD_UP:
+				aceleracionNave = 0;
 
-			aceleracionNave = 0;
+				break;
 
-			break;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
 
-		case KeyEvent.KEYCODE_DPAD_LEFT:
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
 
-		case KeyEvent.KEYCODE_DPAD_RIGHT:
+				giroNave = 0;
 
-			giroNave = 0;
+				break;
 
-			break;
+			default:
 
-		default:
+				// Si estamos aquí, no hay pulsación que nos interese
 
-			// Si estamos aquí, no hay pulsación que nos interese
+				procesada = false;
 
-			procesada = false;
+				break;
 
-			break;
+			}
 
+			return procesada;
+		} else {
+			return false;
 		}
-
-		return procesada;
 
 	}
 
@@ -448,23 +457,24 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		if (pref.getString("controles", "-1").equals("2")) {
+			float valor = event.values[1];
+			float valorAcel = event.values[2];
 
-		float valor = event.values[1];
-		float valorAcel = event.values[2];
+			if (!hayValorInicial) {
 
-		if (!hayValorInicial) {
+				valorInicial = valor;
+				valorInicialAcel = valorAcel;
 
-			valorInicial = valor;
-			valorInicialAcel = valorAcel;
+				hayValorInicial = true;
 
-			hayValorInicial = true;
+			}
 
+			giroNave = (int) (valor - valorInicial) * 2;
+
+			aceleracionNave = (float) ((valorAcel - valorInicialAcel) / 5.0);
+			padre.actualizarEtiquetas(aceleracionNave, giroNave);
 		}
-
-		giroNave = (int) (valor - valorInicial) * 2;
-
-		aceleracionNave = (float) ((valorAcel - valorInicialAcel) / 5.0);
-		padre.actualizarEtiquetas(aceleracionNave,giroNave);
 
 	}
 }
