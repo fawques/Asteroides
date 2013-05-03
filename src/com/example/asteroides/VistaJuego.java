@@ -277,6 +277,8 @@ public class VistaJuego extends View implements SensorEventListener {
 						if (misil.verificaColision(Asteroides.elementAt(j))) {
 
 							destruyeAsteroide(j);
+							
+							misilActivo.set(i, false);
 
 							break;
 
@@ -294,7 +296,7 @@ public class VistaJuego extends View implements SensorEventListener {
 
 		Asteroides.remove(i);
 
-		misilActivo.set(i, false);
+		
 
 	}
 
