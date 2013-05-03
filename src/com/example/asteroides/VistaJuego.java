@@ -334,66 +334,61 @@ public class VistaJuego extends View implements SensorEventListener {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		if (pref.getString("controles", "-1").equals("1")) {
-			float x = event.getX();
 
-			float y = event.getY();
+		float x = event.getX();
 
-			switch (event.getAction()) {
+		float y = event.getY();
 
-			case MotionEvent.ACTION_DOWN:
+		switch (event.getAction()) {
 
-				disparo = true;
+		case MotionEvent.ACTION_DOWN:
 
-				break;
+			disparo = true;
 
-			case MotionEvent.ACTION_MOVE:
+			break;
 
-				float dx = Math.abs(x - mX);
+		case MotionEvent.ACTION_MOVE:
 
-				float dy = Math.abs(y - mY);
+			float dx = Math.abs(x - mX);
 
-				if (dy < 6 && dx > 6) {
+			float dy = Math.abs(y - mY);
 
+			if (dy < 6 && dx > 6) {
+				if (pref.getString("controles", "-1").equals("1")) {
 					giroNave = Math.round((x - mX) / 2);
-
+				}
 					disparo = false;
-
-				} else if (dx < 6 && dy > 6) {
-
+			} else if (dx < 6 && dy > 6) {
+				if (pref.getString("controles", "-1").equals("1")) {
 					aceleracionNave = Math.round((mY - y) / 25);
 					if (aceleracionNave < 0)
 						aceleracionNave = 0;
-
+				}
 					disparo = false;
+			}
 
-				}
+			break;
 
-				break;
+		case MotionEvent.ACTION_UP:
 
-			case MotionEvent.ACTION_UP:
+			giroNave = 0;
 
-				giroNave = 0;
+			aceleracionNave = 0;
 
-				aceleracionNave = 0;
+			if (disparo) {
 
-				if (disparo) {
-
-					ActivaMisil();
-
-				}
-
-				break;
+				ActivaMisil();
 
 			}
 
-			mX = x;
-			mY = y;
+			break;
 
-			return true;
-		} else {
-			return false;
 		}
+
+		mX = x;
+		mY = y;
+
+		return true;
 
 	}
 
