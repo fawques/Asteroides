@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class Asteroides extends Activity {
 
@@ -59,8 +60,66 @@ public class Asteroides extends Activity {
 
 			}
 		});
+		Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 	}
 
+	 @Override protected void onStart() {
+
+		   super.onStart();
+
+		   Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+
+		}
+
+		 
+
+		@Override protected void onResume() {
+
+		   super.onResume();
+
+		   Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+
+		}
+
+		 
+
+		@Override protected void onPause() {
+
+		   Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
+
+		   super.onPause();
+
+		}
+
+		 
+
+		@Override protected void onStop() {
+
+		   Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
+
+		   super.onStop();
+
+		}
+
+		 
+
+		@Override protected void onRestart() {
+
+		   super.onRestart();
+
+		   Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
+
+		}
+
+		 
+
+		@Override protected void onDestroy() {
+
+		   Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
+
+		   super.onDestroy();
+
+		}
 	protected void lanzarJuego() {
 		Intent i = new Intent(this, Juego.class);
 
