@@ -70,6 +70,10 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	// Cada cuanto queremos procesar cambios (ms)
 
+	public ThreadJuego getThread() {
+		return thread;
+	}
+
 	private static int PERIODO_PROCESO = 50;
 
 	// Cuando se realizó el último proceso
@@ -277,7 +281,7 @@ public class VistaJuego extends View implements SensorEventListener {
 						if (misil.verificaColision(Asteroides.elementAt(j))) {
 
 							destruyeAsteroide(j);
-							
+
 							misilActivo.set(i, false);
 
 							break;
@@ -295,8 +299,6 @@ public class VistaJuego extends View implements SensorEventListener {
 	private void destruyeAsteroide(int i) {
 
 		Asteroides.remove(i);
-
-		
 
 	}
 
@@ -359,14 +361,14 @@ public class VistaJuego extends View implements SensorEventListener {
 				if (pref.getString("controles", "-1").equals("1")) {
 					giroNave = Math.round((x - mX) / 2);
 				}
-					disparo = false;
+				disparo = false;
 			} else if (dx < 6 && dy > 6) {
 				if (pref.getString("controles", "-1").equals("1")) {
 					aceleracionNave = Math.round((mY - y) / 25);
 					if (aceleracionNave < 0)
 						aceleracionNave = 0;
 				}
-					disparo = false;
+				disparo = false;
 			}
 
 			break;
@@ -549,12 +551,55 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	class ThreadJuego extends Thread {
 
+		private boolean pausa, corriendo;
+
+		public synchronized void pausar() {
+
+			pausa = true;
+
+		}
+
+		public synchronized void reanudar() {
+
+			pausa = false;
+
+			notify();
+
+		}
+
+		public void detener() {
+
+			corriendo = false;
+
+			if (pausa)
+				reanudar();
+
+		}
+
 		@Override
 		public void run() {
 
-			while (true) {
+			corriendo = true;
+
+			while (corriendo) {
 
 				actualizaFisica();
+
+				synchronized (this) {
+
+					while (pausa) {
+
+						try {
+
+							wait();
+
+						} catch (Exception e) {
+
+						}
+
+					}
+
+				}
 
 			}
 

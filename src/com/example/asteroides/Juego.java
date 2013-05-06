@@ -6,6 +6,9 @@ import android.widget.TextView;
 
 public class Juego extends Activity {
 
+	 private VistaJuego vistaJuego;
+
+
 	   @Override public void onCreate(Bundle savedInstanceState) {
 
 	          super.onCreate(savedInstanceState);
@@ -13,6 +16,7 @@ public class Juego extends Activity {
 	          setContentView(R.layout.juego);
 	          VistaJuego vistaJuego = (VistaJuego) findViewById(R.id.VistaJuego);
 	          vistaJuego.setPadre(this);
+	          vistaJuego = (VistaJuego) findViewById(R.id.VistaJuego);
 	   }
 	   
 	   public void actualizarEtiquetas(float aceleracion, int giro){
@@ -21,5 +25,33 @@ public class Juego extends Activity {
 		   giroLabel.setText("g = " + giro);
 		   aceleracionLabel.setText("a = " + aceleracion);
 	   }
+	   
+	   @Override protected void onPause() {
+
+		   super.onPause();
+
+		   vistaJuego.getThread().pausar();
+
+		}
+
+		 
+
+		@Override protected void onResume() {
+
+		   super.onResume();
+
+		   vistaJuego.getThread().reanudar();
+
+		}
+
+		 
+
+		@Override protected void onDestroy() {
+
+		   vistaJuego.getThread().detener();
+
+		   super.onDestroy();
+
+		}
 
 	}
