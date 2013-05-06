@@ -2,6 +2,7 @@ package com.example.asteroides;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,6 +60,8 @@ public class Asteroides extends Activity {
 
 			}
 		});
+		 MediaPlayer mp = MediaPlayer.create(this, R.raw.audio);
+		 mp.start();
 	}
 
 	protected void lanzarJuego() {
