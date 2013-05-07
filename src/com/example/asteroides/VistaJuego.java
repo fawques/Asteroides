@@ -70,6 +70,10 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	// Cada cuanto queremos procesar cambios (ms)
 
+	public ThreadJuego getThread() {
+		return thread;
+	}
+
 	private static int PERIODO_PROCESO = 50;
 
 	// Cuando se realizó el último proceso
@@ -547,20 +551,71 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	}
 
-	class ThreadJuego extends Thread {
 
-		@Override
-		public void run() {
 
-			while (true) {
+class ThreadJuego extends Thread {
 
-				actualizaFisica();
+   private boolean pausa,corriendo;
 
-			}
+ 
 
-		}
+   public synchronized void pausar() {
 
-	}
+          pausa = true;
+
+   }
+
+ 
+
+   public synchronized void reanudar() {
+
+          pausa = false;
+
+          notify();
+
+   }
+
+ 
+
+   public void detener() {
+
+          corriendo = false;
+
+          if (pausa) reanudar();
+
+   }
+
+  
+
+   @Override    public void run() {
+
+          corriendo = true;
+
+          while (corriendo) {
+
+                 actualizaFisica();
+
+                 synchronized (this) {
+
+                       while (pausa) {
+
+                              try {
+
+                                     wait();
+
+                              } catch (Exception e) {
+
+                              }
+
+                       }
+
+                 }
+
+          }
+
+   }
+
+}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {

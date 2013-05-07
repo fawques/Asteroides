@@ -6,20 +6,50 @@ import android.widget.TextView;
 
 public class Juego extends Activity {
 
-	   @Override public void onCreate(Bundle savedInstanceState) {
+	private VistaJuego vistaJuego;
 
-	          super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 
-	          setContentView(R.layout.juego);
-	          VistaJuego vistaJuego = (VistaJuego) findViewById(R.id.VistaJuego);
-	          vistaJuego.setPadre(this);
-	   }
-	   
-	   public void actualizarEtiquetas(float aceleracion, int giro){
-		   TextView giroLabel = (TextView) findViewById(R.id.giroLabel);
-		   TextView aceleracionLabel= (TextView) findViewById(R.id.aceleracionLabel);
-		   giroLabel.setText("g = " + giro);
-		   aceleracionLabel.setText("a = " + aceleracion);
-	   }
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.juego);
+		vistaJuego = (VistaJuego) findViewById(R.id.VistaJuego);
+		vistaJuego.setPadre(this);
+	}
+
+	public void actualizarEtiquetas(float aceleracion, int giro) {
+		TextView giroLabel = (TextView) findViewById(R.id.giroLabel);
+		TextView aceleracionLabel = (TextView) findViewById(R.id.aceleracionLabel);
+		giroLabel.setText("g = " + giro);
+		aceleracionLabel.setText("a = " + aceleracion);
+	}
+
+	@Override
+	protected void onPause() {
+
+		super.onPause();
+
+		vistaJuego.getThread().pausar();
 
 	}
+
+	@Override
+	protected void onResume() {
+
+		super.onResume();
+
+		vistaJuego.getThread().reanudar();
+
+	}
+
+	@Override
+	protected void onDestroy() {
+
+		vistaJuego.getThread().detener();
+
+		super.onDestroy();
+
+	}
+
+}
