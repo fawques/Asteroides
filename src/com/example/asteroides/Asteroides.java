@@ -50,7 +50,7 @@ public class Asteroides extends Activity {
 
 			}
 		});
-		
+
 		bJugar = (Button) findViewById(R.id.button1);
 		bJugar.setOnClickListener(new OnClickListener() {
 
@@ -63,64 +63,72 @@ public class Asteroides extends Activity {
 		Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 	}
 
-	 @Override protected void onStart() {
+	@Override
+	protected void onStart() {
 
-		   super.onStart();
+		super.onStart();
 
+	}
 
-		}
+	@Override
+	protected void onResume() {
 
-		 
+		super.onResume();
 
-		@Override protected void onResume() {
+	}
 
-		   super.onResume();
+	@Override
+	protected void onPause() {
 
+		super.onPause();
 
+	}
 
-		}
+	@Override
+	protected void onStop() {
 
-		 
+		super.onStop();
 
-		@Override protected void onPause() {
+	}
 
+	@Override
+	protected void onRestart() {
 
-		   super.onPause();
+		super.onRestart();
 
-		}
+	}
 
-		 
+	@Override
+	protected void onDestroy() {
 
-		@Override protected void onStop() {
+		super.onDestroy();
 
+	}
 
-		   super.onStop();
-
-		}
-
-		 
-
-		@Override protected void onRestart() {
-
-		   super.onRestart();
-
-
-		}
-
-		 
-
-		@Override protected void onDestroy() {
-
-		  
-
-		   super.onDestroy();
-
-		}
 	protected void lanzarJuego() {
 		Intent i = new Intent(this, Juego.class);
 
-		startActivity(i);
-		
+		startActivityForResult(i, 1234);
+
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == 1234 && resultCode == RESULT_OK && data != null) {
+
+			boolean win = data.getExtras().getBoolean("win");
+			String mensaje;
+			if (win)
+				mensaje = "Felicidades, has ganado!";
+			else
+				mensaje = "Ooh, has perdido";
+			Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+
+		}
+
 	}
 
 	@Override
