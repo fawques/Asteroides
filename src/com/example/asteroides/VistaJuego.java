@@ -1,6 +1,5 @@
 package com.example.asteroides;
 
-import java.util.List;
 import java.util.Vector;
 
 import android.annotation.TargetApi;
@@ -19,6 +18,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -83,11 +84,15 @@ public class VistaJuego extends View implements SensorEventListener {
 	private float mX = 0, mY = 0;
 
 	private boolean disparo = false;
-	
+
 	public SensorManager mSensorManager;
-	
+	// //// MULTIMEDIA //////
+
+	SoundPool soundPool;
+
+	int idDisparo, idExplosion;
+
 	private Juego padre;
-	
 
 	public void setPadre(Activity padre) {
 
@@ -203,7 +208,11 @@ public class VistaJuego extends View implements SensorEventListener {
 		mSensorManager = (SensorManager) context
 				.getSystemService(Context.SENSOR_SERVICE);
 
-		
+		soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+
+		idDisparo = soundPool.load(context, R.raw.disparo, 0);
+
+		idExplosion = soundPool.load(context, R.raw.explosion, 0);
 
 	}
 
@@ -275,7 +284,7 @@ public class VistaJuego extends View implements SensorEventListener {
 						if (misil.verificaColision(Asteroides.elementAt(j))) {
 
 							destruyeAsteroide(j);
-							
+
 							misilActivo.set(i, false);
 
 							break;
@@ -293,8 +302,7 @@ public class VistaJuego extends View implements SensorEventListener {
 	private void destruyeAsteroide(int i) {
 
 		Asteroides.remove(i);
-
-		
+        soundPool.play(idExplosion, 1, 1, 0, 0, 1);
 
 	}
 
@@ -327,6 +335,7 @@ public class VistaJuego extends View implements SensorEventListener {
 					this.getHeight() / Math.abs(misil.getIncY())) - 2);
 
 			misilActivo.set(indice, true);
+			 soundPool.play(idDisparo, 1, 1, 1, 0, 1);
 		}
 
 	}
@@ -357,14 +366,14 @@ public class VistaJuego extends View implements SensorEventListener {
 				if (pref.getString("controles", "-1").equals("1")) {
 					giroNave = Math.round((x - mX) / 2);
 				}
-					disparo = false;
+				disparo = false;
 			} else if (dx < 6 && dy > 6) {
 				if (pref.getString("controles", "-1").equals("1")) {
 					aceleracionNave = Math.round((mY - y) / 25);
 					if (aceleracionNave < 0)
 						aceleracionNave = 0;
 				}
-					disparo = false;
+				disparo = false;
 			}
 
 			break;
@@ -545,70 +554,62 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	}
 
+	class ThreadJuego extends Thread {
 
+		private boolean pausa, corriendo;
 
-class ThreadJuego extends Thread {
+		public synchronized void pausar() {
 
-   private boolean pausa,corriendo;
+			pausa = true;
+		}
 
- 
+		public synchronized void reanudar() {
 
-   public synchronized void pausar() {
+			pausa = false;
 
-          pausa = true;
-   }
+			notify();
 
- 
+		}
 
-   public synchronized void reanudar() {
+		public void detener() {
 
-          pausa = false;
+			corriendo = false;
 
-          notify();
+			if (pausa)
+				reanudar();
 
-   }
+		}
 
- 
+		@Override
+		public void run() {
 
-   public void detener() {
+			corriendo = true;
 
-          corriendo = false;
+			while (corriendo) {
 
-          if (pausa) reanudar();
+				actualizaFisica();
 
-   }
+				synchronized (this) {
 
-  
+					while (pausa) {
 
-   @Override    public void run() {
+						try {
 
-          corriendo = true;
+							wait();
 
-          while (corriendo) {
+						} catch (Exception e) {
 
-                 actualizaFisica();
+						}
 
-                 synchronized (this) {
+					}
 
-                       while (pausa) {
+				}
 
-                              try {
+			}
 
-                                     wait();
+		}
 
-                              } catch (Exception e) {
-
-                              }
-
-                       }
-
-                 }
-
-          }
-
-   }
-
-}
+	}
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
