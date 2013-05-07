@@ -119,7 +119,7 @@ public class VistaJuego extends View implements SensorEventListener {
 			numFragmentos = 3;
 		}
 		sounds = pref.getBoolean("sonidos", false);
-		sounds = pref.getBoolean("musica", false);
+		music = pref.getBoolean("musica", false);
 
 		if (pref.getString("graficos", "1").equals("0")) {
 			desactivarAceleracionHardware();
@@ -327,7 +327,7 @@ public class VistaJuego extends View implements SensorEventListener {
 
 			if (asteroide.verificaColision(nave)) {
 
-				salir();
+				salir(false);
 
 			}
 
@@ -335,7 +335,7 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	}
 
-	private void salir() {
+	private void salir(boolean win) {
 		padre.finish();
 	}
 
@@ -377,10 +377,10 @@ public class VistaJuego extends View implements SensorEventListener {
 
 		}
 		Asteroides.remove(i);
-		if (!sounds)
+		if (sounds)
 			soundPool.play(idExplosion, 1, 1, 0, 0, 1);
 		if (Asteroides.isEmpty()) {
-			salir();
+			salir(true);
 		}
 
 	}
@@ -414,7 +414,7 @@ public class VistaJuego extends View implements SensorEventListener {
 					this.getHeight() / Math.abs(misil.getIncY())) - 2);
 
 			misilActivo.set(indice, true);
-			if (!sounds)
+			if (sounds)
 				soundPool.play(idDisparo, 1, 1, 1, 0, 1);
 		}
 
