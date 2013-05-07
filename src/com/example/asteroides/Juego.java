@@ -1,6 +1,10 @@
 package com.example.asteroides;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -29,8 +33,9 @@ public class Juego extends Activity {
 	protected void onPause() {
 
 		super.onPause();
-
+		vistaJuego.mSensorManager.unregisterListener(vistaJuego);
 		vistaJuego.getThread().pausar();
+		
 
 	}
 
@@ -39,6 +44,18 @@ public class Juego extends Activity {
 
 		super.onResume();
 
+		List<Sensor> listSensors = vistaJuego.mSensorManager
+				.getSensorList(Sensor.TYPE_ACCELEROMETER);
+
+		if (!listSensors.isEmpty()) {
+
+			Sensor orientationSensor = listSensors.get(0);
+
+			vistaJuego.mSensorManager.registerListener(vistaJuego, orientationSensor,
+
+			SensorManager.SENSOR_DELAY_GAME);
+		}
+		
 		vistaJuego.getThread().reanudar();
 
 	}

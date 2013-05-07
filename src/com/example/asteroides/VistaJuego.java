@@ -83,7 +83,11 @@ public class VistaJuego extends View implements SensorEventListener {
 	private float mX = 0, mY = 0;
 
 	private boolean disparo = false;
+	
+	public SensorManager mSensorManager;
+	
 	private Juego padre;
+	
 
 	public void setPadre(Activity padre) {
 
@@ -196,20 +200,10 @@ public class VistaJuego extends View implements SensorEventListener {
 
 		}
 
-		SensorManager mSensorManager = (SensorManager) context
+		mSensorManager = (SensorManager) context
 				.getSystemService(Context.SENSOR_SERVICE);
 
-		List<Sensor> listSensors = mSensorManager
-				.getSensorList(Sensor.TYPE_ACCELEROMETER);
-
-		if (!listSensors.isEmpty()) {
-
-			Sensor orientationSensor = listSensors.get(0);
-
-			mSensorManager.registerListener(this, orientationSensor,
-
-			SensorManager.SENSOR_DELAY_GAME);
-		}
+		
 
 	}
 
@@ -562,7 +556,6 @@ class ThreadJuego extends Thread {
    public synchronized void pausar() {
 
           pausa = true;
-
    }
 
  
