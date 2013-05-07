@@ -67,7 +67,6 @@ public class Asteroides extends Activity {
 
 		   super.onStart();
 
-		   Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
 
 		}
 
@@ -77,7 +76,7 @@ public class Asteroides extends Activity {
 
 		   super.onResume();
 
-		   Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+
 
 		}
 
@@ -85,7 +84,6 @@ public class Asteroides extends Activity {
 
 		@Override protected void onPause() {
 
-		   Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
 
 		   super.onPause();
 
@@ -95,7 +93,6 @@ public class Asteroides extends Activity {
 
 		@Override protected void onStop() {
 
-		   Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
 
 		   super.onStop();
 
@@ -107,7 +104,6 @@ public class Asteroides extends Activity {
 
 		   super.onRestart();
 
-		   Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
 
 		}
 
@@ -115,7 +111,7 @@ public class Asteroides extends Activity {
 
 		@Override protected void onDestroy() {
 
-		   Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
+		  
 
 		   super.onDestroy();
 
