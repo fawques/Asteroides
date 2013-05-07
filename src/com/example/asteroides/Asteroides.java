@@ -60,7 +60,6 @@ public class Asteroides extends Activity {
 
 			}
 		});
-		Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
