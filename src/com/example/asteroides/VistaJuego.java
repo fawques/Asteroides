@@ -323,7 +323,20 @@ public class VistaJuego extends View implements SensorEventListener {
 			}
 
 		}
+		for (Grafico asteroide : Asteroides) {
 
+			if (asteroide.verificaColision(nave)) {
+
+				salir();
+
+			}
+
+		}
+
+	}
+
+	private void salir() {
+		padre.finish();
 	}
 
 	private void destruyeAsteroide(int i) {
@@ -366,6 +379,9 @@ public class VistaJuego extends View implements SensorEventListener {
 		Asteroides.remove(i);
 		if (!sounds)
 			soundPool.play(idExplosion, 1, 1, 0, 0, 1);
+		if (Asteroides.isEmpty()) {
+			salir();
+		}
 
 	}
 
