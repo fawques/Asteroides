@@ -32,7 +32,7 @@ public class Asteroides extends Activity {
 
 			}
 		});
-		bPunt = (Button) findViewById(R.id.button4);
+/*		bPunt = (Button) findViewById(R.id.button4);
 		bPunt.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -40,7 +40,7 @@ public class Asteroides extends Activity {
 				lanzarPuntuaciones(null);
 
 			}
-		});
+		});*/
 		bSalir = (Button) findViewById(R.id.button5);
 		bSalir.setOnClickListener(new OnClickListener() {
 

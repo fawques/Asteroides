@@ -7,6 +7,6 @@
 
   android:layout_height="wrap_content"
 
-  android:text="Este programa ha sido desarrollado como ejemplo en el curso de Android para demostrar cómo se pueden lanzar nuevas actividades desde la actividad principal.">
+  android:text="Aplicación Asteroides - Víctor Guzmán Pedrajas - Estudio de un Sistema Operativo">
 
 </TextView>
