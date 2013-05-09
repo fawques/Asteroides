@@ -42,7 +42,7 @@ class Grafico {
 
     }
 
-         public void dibujaGrafico(Canvas canvas){
+	public void dibujaGrafico(Canvas canvas){
 
           canvas.save();
 

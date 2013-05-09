@@ -435,6 +435,66 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	}
 
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void desactivarAceleracionHardware() {
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
+	}
+
+	@Override
+	protected void onSizeChanged(int ancho, int alto, int ancho_anter,
+			int alto_anter) {
+
+		super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
+
+		// Una vez que conocemos nuestro ancho y alto.
+
+		for (Grafico asteroide : Asteroides) {
+			nave.setPosX(ancho / 2);
+			nave.setPosY(alto / 2);
+			do {
+
+				asteroide.setPosX(Math.random()
+						* (ancho - asteroide.getAncho()));
+
+				asteroide.setPosY(Math.random() * (alto - asteroide.getAlto()));
+
+			} while (asteroide.distancia(nave) < (ancho + alto) / 5);
+
+		}
+
+		ultimoProceso = System.currentTimeMillis();
+
+		thread.start();
+
+	}
+
+	@Override
+	protected synchronized void onDraw(Canvas canvas) {
+
+		super.onDraw(canvas);
+
+		for (Grafico asteroide : Asteroides) {
+
+			asteroide.dibujaGrafico(canvas);
+
+		}
+		nave.dibujaGrafico(canvas);
+
+		for (int i = 0; i < numMisiles; i++) {
+			if (misilActivo.get(i)) {
+				Grafico misil = misiles.get(i);
+				misil.dibujaGrafico(canvas);
+			}
+
+		}
+
+	}
+
+	// Tactil
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
@@ -496,64 +556,8 @@ public class VistaJuego extends View implements SensorEventListener {
 		}
 
 	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void desactivarAceleracionHardware() {
-		if (android.os.Build.VERSION.SDK_INT >= 11) {
-			this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		}
-	}
-
-	@Override
-	protected void onSizeChanged(int ancho, int alto, int ancho_anter,
-			int alto_anter) {
-
-		super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
-
-		// Una vez que conocemos nuestro ancho y alto.
-
-		for (Grafico asteroide : Asteroides) {
-			nave.setPosX(ancho / 2);
-			nave.setPosY(alto / 2);
-			do {
-
-				asteroide.setPosX(Math.random()
-						* (ancho - asteroide.getAncho()));
-
-				asteroide.setPosY(Math.random() * (alto - asteroide.getAlto()));
-
-			} while (asteroide.distancia(nave) < (ancho + alto) / 5);
-
-		}
-
-		ultimoProceso = System.currentTimeMillis();
-
-		thread.start();
-
-	}
-
-	@Override
-	protected synchronized void onDraw(Canvas canvas) {
-
-		super.onDraw(canvas);
-
-		for (Grafico asteroide : Asteroides) {
-
-			asteroide.dibujaGrafico(canvas);
-
-		}
-		nave.dibujaGrafico(canvas);
-
-		for (int i = 0; i < numMisiles; i++) {
-			if (misilActivo.get(i)) {
-				Grafico misil = misiles.get(i);
-				misil.dibujaGrafico(canvas);
-			}
-
-		}
-
-	}
-
+	
+	// DPAD
 	@Override
 	public boolean onKeyDown(int codigoTecla, KeyEvent evento) {
 
@@ -650,6 +654,40 @@ public class VistaJuego extends View implements SensorEventListener {
 
 	}
 
+	// Sensores
+
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	}
+
+	private boolean hayValorInicial = false;
+
+	private float valorInicial;
+	private float valorInicialAcel;
+
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		if (pref.getString("controles", "-1").equals("2")) {
+			float valor = event.values[1];
+			float valorAcel = event.values[2];
+
+			if (!hayValorInicial) {
+
+				valorInicial = valor;
+				valorInicialAcel = valorAcel;
+
+				hayValorInicial = true;
+
+			}
+
+			giroNave = (int) (valor - valorInicial) * 2;
+
+			aceleracionNave = (float) ((valorAcel - valorInicialAcel) / 5.0);
+			padre.actualizarEtiquetas(aceleracionNave, giroNave);
+		}
+
+	}
+
 	class ThreadJuego extends Thread {
 
 		private boolean pausa, corriendo;
@@ -703,38 +741,6 @@ public class VistaJuego extends View implements SensorEventListener {
 
 			}
 
-		}
-
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-	}
-
-	private boolean hayValorInicial = false;
-
-	private float valorInicial;
-	private float valorInicialAcel;
-
-	@Override
-	public void onSensorChanged(SensorEvent event) {
-		if (pref.getString("controles", "-1").equals("2")) {
-			float valor = event.values[1];
-			float valorAcel = event.values[2];
-
-			if (!hayValorInicial) {
-
-				valorInicial = valor;
-				valorInicialAcel = valorAcel;
-
-				hayValorInicial = true;
-
-			}
-
-			giroNave = (int) (valor - valorInicial) * 2;
-
-			aceleracionNave = (float) ((valorAcel - valorInicialAcel) / 5.0);
-			padre.actualizarEtiquetas(aceleracionNave, giroNave);
 		}
 
 	}
