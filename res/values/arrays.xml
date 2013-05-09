@@ -6,6 +6,8 @@
 
   <item>bitmap</item>
 
+  <item>3D</item>
+
 </string-array>
 
 <string-array name="tiposGraficosValores">
@@ -13,6 +15,8 @@
   <item>0</item>
 
   <item>1</item>
+
+  <item>2</item>
 
 </string-array>
 <string-array name="tiposControles">
