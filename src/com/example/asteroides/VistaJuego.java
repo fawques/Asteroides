@@ -244,7 +244,7 @@ public class VistaJuego extends View implements SensorEventListener {
 		idDisparo = soundPool.load(context, R.raw.disparo, 0);
 
 		idExplosion = soundPool.load(context, R.raw.explosion, 0);
-		
+
 		mp = MediaPlayer.create(context, R.raw.dwhoclarity);
 		mp.setLooping(true);
 
@@ -439,60 +439,61 @@ public class VistaJuego extends View implements SensorEventListener {
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
 
-		float x = event.getX();
+		if (pref.getString("controles", "-1").equals("1")) {
+			float x = event.getX();
 
-		float y = event.getY();
+			float y = event.getY();
 
-		switch (event.getAction()) {
+			switch (event.getAction()) {
 
-		case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_DOWN:
 
-			disparo = true;
+				disparo = true;
 
-			break;
+				break;
 
-		case MotionEvent.ACTION_MOVE:
+			case MotionEvent.ACTION_MOVE:
 
-			float dx = Math.abs(x - mX);
+				float dx = Math.abs(x - mX);
 
-			float dy = Math.abs(y - mY);
+				float dy = Math.abs(y - mY);
 
-			if (dy < 6 && dx > 6) {
-				if (pref.getString("controles", "-1").equals("1")) {
+				if (dy < 6 && dx > 6) {
+
 					giroNave = Math.round((x - mX) / 2);
-				}
-				disparo = false;
-			} else if (dx < 6 && dy > 6) {
-				if (pref.getString("controles", "-1").equals("1")) {
+					disparo = false;
+				} else if (dx < 6 && dy > 6) {
 					aceleracionNave = Math.round((mY - y) / 25);
 					if (aceleracionNave < 0)
 						aceleracionNave = 0;
+					disparo = false;
 				}
-				disparo = false;
+
+				break;
+
+			case MotionEvent.ACTION_UP:
+
+				giroNave = 0;
+
+				aceleracionNave = 0;
+
+				if (disparo) {
+
+					ActivaMisil();
+
+				}
+
+				break;
+
 			}
 
-			break;
+			mX = x;
+			mY = y;
 
-		case MotionEvent.ACTION_UP:
-
-			giroNave = 0;
-
-			aceleracionNave = 0;
-
-			if (disparo) {
-
-				ActivaMisil();
-
-			}
-
-			break;
-
+			return true;
+		} else {
+			return false;
 		}
-
-		mX = x;
-		mY = y;
-
-		return true;
 
 	}
 
