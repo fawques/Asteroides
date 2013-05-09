@@ -20,6 +20,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -91,9 +92,10 @@ public class VistaJuego extends View implements SensorEventListener {
 	public SensorManager mSensorManager;
 	// //// MULTIMEDIA //////
 
-	SoundPool soundPool;
+	public SoundPool soundPool;
+	public MediaPlayer mp;
 
-	int idDisparo, idExplosion;
+	int idDisparo, idExplosion, musicaFondo;
 
 	boolean sounds;
 	boolean music;
@@ -242,6 +244,9 @@ public class VistaJuego extends View implements SensorEventListener {
 		idDisparo = soundPool.load(context, R.raw.disparo, 0);
 
 		idExplosion = soundPool.load(context, R.raw.explosion, 0);
+		
+		mp = MediaPlayer.create(context, R.raw.dwhoclarity);
+		mp.setLooping(true);
 
 	}
 

@@ -3,8 +3,10 @@ package com.example.asteroides;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ public class Juego extends Activity {
 		setContentView(R.layout.juego);
 		vistaJuego = (VistaJuego) findViewById(R.id.VistaJuego);
 		vistaJuego.setPadre(this);
+
 	}
 
 	public void actualizarEtiquetas(float aceleracion, int giro) {
@@ -35,7 +38,8 @@ public class Juego extends Activity {
 		super.onPause();
 		vistaJuego.mSensorManager.unregisterListener(vistaJuego);
 		vistaJuego.getThread().pausar();
-		
+		if (vistaJuego.mp.isPlaying())
+			vistaJuego.mp.pause();
 
 	}
 
@@ -51,12 +55,14 @@ public class Juego extends Activity {
 
 			Sensor orientationSensor = listSensors.get(0);
 
-			vistaJuego.mSensorManager.registerListener(vistaJuego, orientationSensor,
+			vistaJuego.mSensorManager.registerListener(vistaJuego,
+					orientationSensor,
 
-			SensorManager.SENSOR_DELAY_GAME);
+					SensorManager.SENSOR_DELAY_GAME);
 		}
-		
 		vistaJuego.getThread().reanudar();
+		if(vistaJuego.music)
+				vistaJuego.mp.start();
 
 	}
 
@@ -64,6 +70,10 @@ public class Juego extends Activity {
 	protected void onDestroy() {
 
 		vistaJuego.getThread().detener();
+		if (vistaJuego.mp != null) {
+			vistaJuego.mp.stop();
+			vistaJuego.mp.release();
+		}
 
 		super.onDestroy();
 
